@@ -2,13 +2,10 @@ contract MemeVote =
 
   record meme  =
     { creatorAddress : address,
-        url            : string,
+      url            : string,
       name           : string,
       voteCount      : int,
-      tags           : map (int, tag)}
-      
-  record tag = { 
-    words : string }
+      tags           : list(string)}
       
   record state = {
     memes       : map(int, meme),
@@ -23,8 +20,8 @@ contract MemeVote =
       None    => abort("No meme was found.")
       Some(x) =>  x
 
-  public stateful function registerMeme(url' : string, name' : string ) =
-    let meme = { creatorAddress = Call.caller, url = url', name = name', voteCount = 0, tags={}}
+  public stateful function registerMeme(url' : string, name' : string, tags' : list(string)) =
+    let meme = { creatorAddress = Call.caller, url = url', name = name', voteCount = 0, tags = tags'}
     let index = getMemesLength() + 1
     put(state {memes[index] = meme, memesLength = index})
     
