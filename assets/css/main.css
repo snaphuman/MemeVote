@@ -1,0 +1,8 @@
+
+.content.is-vcentered,
+.media.is-vcentered{
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center; /* commenting this out, the multiple lines will have gaps */
+    align-items: center; /* commenting this out, the one-line will not align */
+}
