@@ -1,16 +1,21 @@
 var memeCardTemplate = `
   <div class="card">
+      <header class="card-header">
+        <div class="card-header-title">
+        <h2 class="title is-2">{{ meme.creatorName}}</h2>
+        </div>
+      </header>
       <div class="card-image">
           <figure class="image is-2by1">
-              <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
+              <img :src="meme.memeUrl" alt="Placeholder image">
           </figure>
       </div>
       <div class="card-content">
           <div class="content">
               <div class="media is-vcentered">
                   <div class="media-left">
-                      <p class="title is-6">ættos</p>
-                      <p class="title is-1">10</p>
+                      <span class="title is-6">ættos</span>
+                      <div class="title is-1">{{ meme.votes }}</div>
                   </div>
                   <div class="media-content">
                       <div class="box">
@@ -30,8 +35,11 @@ var memeCardTemplate = `
                   </div>
               </div>
               <div id="comments">
-                  <h2 class="title is-2">Comments</h2>
-                  <meme-comment></meme-comment>
+                  <h3 class="title is-2">Comments</h3>
+                  <meme-comment
+                  v-for="comment in comments"
+                  v-bind:comment="comment">
+                  </meme-comment>
                   <footer class="card-footer">
                       <a href="#" class="card-footer-item">View all comments</a>
                   </footer>
@@ -44,11 +52,10 @@ var memeCardTemplate = `
 var memeCommentTemplate = `
   <div class="comment">
       <div class="comment-author">
-          <p class="title is-4">Last comment</p>
+          <p class="title is-4">{{ comment.author }}</p>
       </div>
       <div class="comment-body">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Phasellus nec iaculis mauris.
+        {{ comment.comment }}
       </div>
   </div>
 `;
