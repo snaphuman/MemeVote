@@ -34,7 +34,7 @@ var memeCardTemplate = `
                       </div>
                   </div>
               </div>
-              <div id="comments">
+              <div id="comments" v-if="comments">
                   <h3 class="title is-2">Comments</h3>
                   <meme-comment
                   v-for="comment in comments"
