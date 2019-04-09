@@ -1,4 +1,4 @@
-const contractAddress = 'ct_2qcqwwXmfLmZ3a18yvnv4p8ta9HGoyHRjCDvPMvyAqkuMRwzPD';
+const contractAddress = 'ct_2UEAE7fXgAsGpbm885LoqeWXFZcaYBSPuiDWDgH5N3FSuBLScw';
 
 var client = null;
 
@@ -60,6 +60,8 @@ var app = new Vue({
 
             const calledGet = await client.contractCallStatic(contractAddress, 'sophia-address', 'getMemesLength', {args: '()'}).catch(e => console.error(e));
             console.log('calledGet', calledGet);
+            const decodedGet = await client.contractDecodeData('int', calledGet.result.returnValue).catch(e => console.error(e));
+            console.log('decodedGet', decodedGet.value);
         }
     }
 })
