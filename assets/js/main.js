@@ -1,4 +1,4 @@
-const contractAddress = 'ct_2UEAE7fXgAsGpbm885LoqeWXFZcaYBSPuiDWDgH5N3FSuBLScw';
+const contractAddress = 'ct_2npyeQ9r1ies2R51JLuEnNWk1FKsykqta8joVgrgSzo3PgThfA';
 
 var client = null;
 
@@ -8,16 +8,7 @@ var memesLength = 0;
 
 var commentsArray = [];
 
-var pageTitle = "Meme Voting"
-
-/**
-var memeArray = [
-    {"creatorName": "Alice","memeUrl": "https://pbs.twimg.com/media/Dsdt6gOXcAAksLu.jpg","votes":18, "index":1, "rank":1, "comments":[ {"author": "Linda", "comment": "I like it!"}, { "author": "Richard", "comment": "Very funny"} ]},
-    {"creatorName": "Bob","memeUrl": "https://pbs.twimg.com/media/C4Vu1S0WYAA3Clw.jpg","votes":27, "index":2, "rank":2},
-    {"creatorName": "Carol","memeUrl": "https://pbs.twimg.com/media/DeHbsSAU0AAbQAq.jpg","votes":14, "index":3, "rank":3}
-];
-*/
-
+var pageTitle = "Meme Voting";
 
 var memeCard = Vue.component('meme-card', {
     props: {
@@ -36,16 +27,31 @@ var memeComment = Vue.component('meme-comment', {
         comment: Object
     },
     template: memeCommentTemplate
-})
+});
 
 var app = new Vue({
     el: '#app',
     mounted: function(){
         this.loadAEClient();
+
+        const memesLength = this.getMemesLength();
+
+        for (let i = 1; i < memesLength; i++ ) {
+            const meme = this.getMeme(i);
+
+            memeArray.push({
+                creatorName: meme.value[2].value,
+                memeUrl: meme.value[1].value,
+                index: i,
+                votes: meme.value[3].value,
+                comments: commentsArray,
+                tags: meme.value[5]
+            });
+        }
     },
     data: {
         title: pageTitle,
-        memes: memeArray,
+        memes: memeArray
     },
     head: {
         title: {
@@ -57,11 +63,26 @@ var app = new Vue({
     methods: {
         async loadAEClient () {
             client = await Ae.Aepp();
+        },
+        async callAEStatic (func, args, types) {
+            const calledGet = await client.contractCallStatic(
+                contractAddress, 'sophia-address', func, {args})
+                  .catch(e => console.error(e));
 
-            const calledGet = await client.contractCallStatic(contractAddress, 'sophia-address', 'getMemesLength', {args: '()'}).catch(e => console.error(e));
-            console.log('calledGet', calledGet);
-            const decodedGet = await client.contractDecodeData('int', calledGet.result.returnValue).catch(e => console.error(e));
-            console.log('decodedGet', decodedGet.value);
+            const decodedGet = await client.contractDecodeData(types, calledGet.result.returnValue)
+                  .catch(e => console.error(e));
+
+            return decodedGet.value;
+        },
+        async getMemesLength () {
+
+            return this.callAEStatic('getMemesLength', '()', 'int');
+        },
+        async getMeme(index) {
+
+            return this.callAEStatic('getMeme',
+                                     `(${index})`,
+                                     '(address, string, string, int, list(address,string,string), list(string))');
         }
     }
-})
+});
