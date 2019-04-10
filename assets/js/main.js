@@ -53,11 +53,11 @@ var app = new Vue({
             const decodedGet = await this.client.contractDecodeData(types, calledGet.result.returnValue)
                   .catch(e => console.error(e));
 
-            return decodedGet.value;
+            return decodedGet;
         },
         async getMemesLength () {
 
-            return this.callAEStatic('getMemesLength', '()', 'int');
+            return this.callAEStatic('getMemesLength', '()', 'int').value;
         },
         async getMeme(index) {
 
@@ -87,5 +87,7 @@ var app = new Vue({
                 tags: meme.value[5]
             });
         }
+
+        console.log(memeArray);
     }
 });
