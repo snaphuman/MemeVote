@@ -42,6 +42,9 @@ var app = new Vue({
         }
     },
     methods: {
+        async getClient() {
+            this.client = await Ae.Aepp();
+        },
         async callAEStatic (func, args, types) {
             const calledGet = await this.client.contractCallStatic(
                 contractAddress, 'sophia-address', func, {args})
@@ -65,10 +68,10 @@ var app = new Vue({
     },
     async created (){
 
-        this.client = await Ae.Aepp();
-        console.log(client);
+        await this.getClient();
+        console.log(this.client);
 
-        const memesLength = this.getMemesLength();
+        const memesLength = await this.getMemesLength();
 
         console.log(memesLength);
 
