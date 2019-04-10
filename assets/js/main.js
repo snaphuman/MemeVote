@@ -52,18 +52,18 @@ var app = new Vue({
 
             return decodedGet.value;
         },
-        getMemesLength () {
+        async getMemesLength () {
 
             return this.callAEStatic('getMemesLength', '()', 'int');
         },
-        getMeme(index) {
+        async getMeme(index) {
 
             return this.callAEStatic('getMeme',
                                      `(${index})`,
                                      '(address, string, string, int, list(address,string,string), list(string))');
         }
     },
-    created: async function(){
+    async created (){
 
         this.client = await Ae.Aepp();
         console.log(client);
@@ -84,5 +84,5 @@ var app = new Vue({
                 tags: meme.value[5]
             });
         }
-    },
+    }
 });
