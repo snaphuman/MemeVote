@@ -63,9 +63,11 @@ var app = new Vue({
         },
         async getMeme(index) {
 
+            // The return type works for memes with no comments.
+            // When a meme has comments the return type must be specified.
             return this.callAEStatic('getMeme',
                                      `(${index})`,
-                                     '(address, string, string, int, list(address,string,string), list(string))');
+                                     '(address, string, string, int, list(string), list(string))');
         }
     },
     async created (){
