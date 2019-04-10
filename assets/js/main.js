@@ -76,7 +76,7 @@ var app = new Vue({
         console.log(memesLength);
 
         for (let i = 1; i < memesLength; i++ ) {
-            const meme = this.getMeme(i);
+            const meme = await this.getMeme(i);
 
             memeArray.push({
                 creatorName: meme.value[2].value,
