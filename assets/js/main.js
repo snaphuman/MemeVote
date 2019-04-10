@@ -1,7 +1,5 @@
 const contractAddress = 'ct_2npyeQ9r1ies2R51JLuEnNWk1FKsykqta8joVgrgSzo3PgThfA';
 
-var client = null;
-
 var memeArray = [];
 
 var memesLength = 0;
@@ -31,10 +29,48 @@ var memeComment = Vue.component('meme-comment', {
 
 var app = new Vue({
     el: '#app',
-    mounted: function(){
-        this.loadAEClient();
+    data: {
+        title: pageTitle,
+        memes: memeArray,
+        client: null
+    },
+    head: {
+        title: {
+            inner: pageTitle,
+            separator: ' ',
+            complement: ' '
+        }
+    },
+    methods: {
+        async callAEStatic (func, args, types) {
+            const calledGet = await this.client.contractCallStatic(
+                contractAddress, 'sophia-address', func, {args})
+                  .catch(e => console.error(e));
+
+            const decodedGet = await this.client.contractDecodeData(types, calledGet.result.returnValue)
+                  .catch(e => console.error(e));
+
+            return decodedGet.value;
+        },
+        getMemesLength () {
+
+            return this.callAEStatic('getMemesLength', '()', 'int');
+        },
+        getMeme(index) {
+
+            return this.callAEStatic('getMeme',
+                                     `(${index})`,
+                                     '(address, string, string, int, list(address,string,string), list(string))');
+        }
+    },
+    created: async function(){
+
+        this.client = await Ae.Aepp();
+        console.log(client);
 
         const memesLength = this.getMemesLength();
+
+        console.log(memesLength);
 
         for (let i = 1; i < memesLength; i++ ) {
             const meme = this.getMeme(i);
@@ -49,40 +85,4 @@ var app = new Vue({
             });
         }
     },
-    data: {
-        title: pageTitle,
-        memes: memeArray
-    },
-    head: {
-        title: {
-            inner: pageTitle,
-            separator: ' ',
-            complement: ' '
-        }
-    },
-    methods: {
-        async loadAEClient () {
-            client = await Ae.Aepp();
-        },
-        async callAEStatic (func, args, types) {
-            const calledGet = await client.contractCallStatic(
-                contractAddress, 'sophia-address', func, {args})
-                  .catch(e => console.error(e));
-
-            const decodedGet = await client.contractDecodeData(types, calledGet.result.returnValue)
-                  .catch(e => console.error(e));
-
-            return decodedGet.value;
-        },
-        async getMemesLength () {
-
-            return this.callAEStatic('getMemesLength', '()', 'int');
-        },
-        async getMeme(index) {
-
-            return this.callAEStatic('getMeme',
-                                     `(${index})`,
-                                     '(address, string, string, int, list(address,string,string), list(string))');
-        }
-    }
 });
