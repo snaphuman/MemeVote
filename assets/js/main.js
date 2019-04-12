@@ -1,4 +1,4 @@
-const contractAddress = 'ct_2MeJgny8DrDPeRyHPCuhZh4wrJwPVgKV9sEghRNVY33EfE63Sc ';
+const contractAddress = 'ct_2MeJgny8DrDPeRyHPCuhZh4wrJwPVgKV9sEghRNVY33EfE63Sc';
 
 var memeArray = [];
 
