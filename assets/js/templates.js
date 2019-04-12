@@ -24,11 +24,21 @@ var memeCardTemplate = `
                               <form class="has-text-centered">
                                   <div class="field has-addons has-addons-centered">
                                       <div class="control">
-                                          <input class="input is-expanded" type="number" placeholder="add ættos <f></f>or this meme">
+                                          <input class="input is-expanded" type="number" placeholder="add ættos for this meme">
                                       </div>
                                       <div class="control">
                                           <a class="button is-info">
                                               Vote
+                                          </a>
+                                      </div>
+                                  </div>
+                                  <div class="field has-addons has-addons-centered">
+                                      <div class="control">
+                                          <input class="input is-expanded" type="text" placeholder="comment this meme">
+                                      </div>
+                                      <div class="control">
+                                          <a class="button is-info">
+                                              Comment
                                           </a>
                                       </div>
                                   </div>

@@ -1,10 +1,12 @@
-const contractAddress = 'ct_fBSMn9Wkw7XxNFrqfR8wr55Wx71d8EiTh3bV8mdXxLRNwses3';
+const contractAddress = 'ct_2MeJgny8DrDPeRyHPCuhZh4wrJwPVgKV9sEghRNVY33EfE63Sc ';
 
 var memeArray = [];
 
 var memesLength = 0;
 
 var commentsArray = [];
+
+var tagsArray = [];
 
 var pageTitle = "Meme Voting";
 
@@ -88,7 +90,7 @@ var app = new Vue({
                 index: i,
                 votes: meme.value[3].value,
                 comments: commentsArray,
-                tags: meme.value[5]
+                tags: meme.value[5].value
             });
         }
 
