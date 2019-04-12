@@ -67,7 +67,7 @@ var app = new Vue({
             // When a meme has comments the return type must be specified.
             return this.callAEStatic('getMeme',
                                      `(${index})`,
-                                     `(${type})`
+                                     `(${type})`);
         },
         async getMemeComments(index) {
             // this is used to get the comments length and set de correct
@@ -92,9 +92,9 @@ var app = new Vue({
             const memeComentsLength = Object.keys(memeComments).length;
 
             if (memeCommentsLength) {
-                const t = '(address, string, string, int, list(string), list(string))'
+                const t = '(address, string, string, int, list(string), list(string))';
             } else {
-                const t = '(address, string, string, int, list((addres,string,string)), list(string))'
+                const t = '(address, string, string, int, list((addres,string,string)), list(string))';
             }
 
             const meme = await this.getMeme(i, t);
