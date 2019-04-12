@@ -48,3 +48,11 @@ contract MemeVote =
     let updatedComment =  comment::comments
     let updatedMemes = state.memes{ [index].comments = updatedComment }
     put(state {memes = updatedMemes})
+
+  // Return type: (list((address,string,string)))
+  public function getMemeComments(index: int) =
+    let meme = getMeme(index)
+    let comments = meme.comments
+    switch (comments)
+      [] => []
+      x::tail => [x]

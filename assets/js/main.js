@@ -61,13 +61,22 @@ var app = new Vue({
 
             return this.callAEStatic('getMemesLength', '()', 'int');
         },
-        async getMeme(index) {
+        async getMeme(index, type) {
 
             // The return type works for memes with no comments.
             // When a meme has comments the return type must be specified.
             return this.callAEStatic('getMeme',
                                      `(${index})`,
-                                     '(address, string, string, int, list(string), list(string))');
+                                     `(${type})`
+        },
+        async getMemeComments(index) {
+            // this is used to get the comments length and set de correct
+            // type of the static call to getMene
+
+            return this.callAEStatic('getMemeComments',
+                                     `(${index})`,
+                                     '(list((address,string,string)))'
+                                    );
         }
     },
     async created (){
@@ -76,11 +85,19 @@ var app = new Vue({
         console.log(this.client);
 
         const memesLength = await this.getMemesLength();
-
         console.log(memesLength.value);
 
         for (let i = 1; i <= memesLength.value; i++ ) {
-            const meme = await this.getMeme(i);
+            const memeComments = await this.getMemeComments(i);
+            const memeComentsLength = Object.keys(memeComments).length;
+
+            if (memeCommentsLength) {
+                const t = '(address, string, string, int, list(string), list(string))'
+            } else {
+                const t = '(address, string, string, int, list((addres,string,string)), list(string))'
+            }
+
+            const meme = await this.getMeme(i, t);
 
             memeArray.push({
                 creatorName: meme.value[2].value,
