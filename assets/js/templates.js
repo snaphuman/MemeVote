@@ -6,6 +6,9 @@ var memeCardTemplate = `
             <div class="card-header-title">
             <h2 class="title is-2">{{ meme.creatorName}}</h2>
             </div>
+            <span class="tag is-dark"
+            v-for="tag in meme.tags"
+            >{{ tag.value }}</span>
           </header>
           <div class="card-image">
               <figure class="image is-2by1">

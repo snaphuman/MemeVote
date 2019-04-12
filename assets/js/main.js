@@ -6,8 +6,6 @@ var memesLength = 0;
 
 var commentsArray = [];
 
-var tagsArray = [];
-
 var pageTitle = "Meme Voting";
 
 var memeCard = Vue.component('meme-card', {
