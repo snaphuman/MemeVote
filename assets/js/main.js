@@ -1,5 +1,3 @@
-const contractAddress = 'ct_2MeJgny8DrDPeRyHPCuhZh4wrJwPVgKV9sEghRNVY33EfE63Sc';
-
 var memeArray = [];
 
 var memesLength = 0;
@@ -63,7 +61,7 @@ var app = new Vue({
         },
         async callAEStatic (func, args, types) {
             const calledGet = await this.client.contractCallStatic(
-                contractAddress, 'sophia-address', func, {args})
+                settings.contractAddress, 'sophia-address', func, {args})
                   .catch(e => console.error(e));
 
             const decodedGet = await this.client.contractDecodeData(types, calledGet.result.returnValue)
