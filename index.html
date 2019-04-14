@@ -26,24 +26,24 @@
                             <div class="field">
                                 <label class="label">URL</label>
                                 <div class="control">
-                                    <input class="input is-primary" type="text" placeholder="Enter the Url of the meme">
+                                    <input class="input is-primary" v-model="memeUrl" type="text" placeholder="Enter the Url of the meme">
                                 </div>
                             </div>
                             <div class="field">
                                 <label class="label">Tags</label>
                                 <div class="control">
-                                    <input class="input is-primary" type="text" placeholder="Enter the meme tags separated by comma">
+                                    <input class="input is-primary" v-model="memeTags" type="text" placeholder="Enter the meme tags separated by comma">
                                 </div>
                             </div>
                             <div class="field">
                                 <label class="label">Nickname</label>
                                 <div class="control">
-                                    <input class="input is-primary" type="text" placeholder="Enter your Nickname">
+                                    <input class="input is-primary" v-model="userNickname" type="text" placeholder="Enter your Nickname">
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="control">
-                                    <button class="button">Register</button>
+                                    <button class="button" type="button" v-on:click="registerMeme" >Register</button>
                                 </div>
                             </div>
                         </form>

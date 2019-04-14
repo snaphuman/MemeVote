@@ -25,11 +25,16 @@ var memeComment = Vue.component('meme-comment', {
     template: memeCommentTemplate
 });
 
+Vue.config.devtools = "development";
+
 var app = new Vue({
     el: '#app',
     data: {
         title: pageTitle,
         memes: memeArray,
+        memeUrl: "",
+        memeTags: "",
+        userNickname: "",
         client: null
     },
     head: {
@@ -103,6 +108,40 @@ var app = new Vue({
                                      `(${index})`,
                                      '(list((address,string,string)))'
                                     );
+        },
+        async contractAECall(func, args, value, types) {
+            const calledSet = await this.client.contractCall(settings.contractAddress,
+                                                        'sophia-address',
+                                                        settings.contractAddress,
+                                                        func,
+                                                        {args, options: {amount:value}})
+                  .catch(async (e) => {
+                      const decodedError = await this.client.contractDecodeData(types,
+                                                                                e.returnValue)
+                            .catch(e => console.error(e));
+                  });
+            return;
+        },
+        async registerMeme(){
+
+            const url = this.memeUrl,
+                  user = this.userNickname,
+                  index = memeArray.length + 1,
+                  tags = this.memeTags.split(",");
+
+            await this.contractAECall('registerMeme',
+                                 `("${url}","${user}",["test"])`,
+                                 0,
+                                 '(int)');
+
+            memeArray.push({
+                creatorName: user,
+                memeUrl: url,
+                index: index,
+                votes: 0,
+                comments: [],
+                tags: tags
+            });
         }
     },
     async created (){
