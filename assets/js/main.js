@@ -43,7 +43,23 @@ var app = new Vue({
     },
     methods: {
         async getClient() {
-            this.client = await Ae.Aepp();
+            //this.client = await Ae.Aepp();
+            this.client = await Ae.Wallet({
+                url: settings.url,
+                internalUrl: settings.internalUrl,
+                account: [Ae.MemoryAccount({
+                    keypair: {
+                        secretKey: settings.account.priv,
+                        publicKey: settings.account.pub
+                    }
+                })],
+                address: settings.account.pub,
+                onTx: true,
+                onChain: true,
+                onAccount: true,
+                onContract: true,
+                networkId: settings.networkId
+            });
         },
         async callAEStatic (func, args, types) {
             const calledGet = await this.client.contractCallStatic(
@@ -61,7 +77,18 @@ var app = new Vue({
 
             return this.callAEStatic('getMemesLength', '()', 'int');
         },
-        async getMeme(index, type) {
+        async getMeme(index) {
+
+            const memeComments = await this.getMemeComments(index);
+
+            const memeComentsLength = Object.keys(memeComments).length;
+
+            if (memeCommentsLength) {
+                const type = '(address, string, string, int, list(string), list(string))';
+            } else {
+                const type = '(address, string, string, int, list((addres,string,string)), list(string))';
+            }
+            console.log("type:", type)
 
             // The return type works for memes with no comments.
             // When a meme has comments the return type must be specified.
@@ -71,7 +98,8 @@ var app = new Vue({
         },
         async getMemeComments(index) {
             // this is used to get the comments length and set de correct
-            // type of the static call to getMene
+            // type of the static call to getMeme
+
 
             return this.callAEStatic('getMemeComments',
                                      `(${index})`,
@@ -89,15 +117,8 @@ var app = new Vue({
 
         for (let i = 1; i <= memesLength.value; i++ ) {
             const memeComments = await this.getMemeComments(i);
-            const memeComentsLength = Object.keys(memeComments).length;
 
-            if (memeCommentsLength) {
-                const t = '(address, string, string, int, list(string), list(string))';
-            } else {
-                const t = '(address, string, string, int, list((addres,string,string)), list(string))';
-            }
-
-            const meme = await this.getMeme(i, t);
+            const meme = await this.getMeme(i);
 
             memeArray.push({
                 creatorName: meme.value[2].value,
