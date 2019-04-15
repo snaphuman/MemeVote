@@ -12,7 +12,7 @@ var memeCardTemplate = `
               >{{ tag.value }}</span>
           </header>
           <div class="card-image">
-              <figure class="image is-2by1">
+              <figure class="image is-1">
                   <img :src="meme.memeUrl" alt="Placeholder image">
               </figure>
           </div>

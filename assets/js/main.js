@@ -93,15 +93,15 @@ var app = new Vue({
         async getMeme(index) {
 
             const memeComments = await this.getMemeComments(index);
+            let type;
 
-            const memeComentsLength = Object.keys(memeComments).length;
-
-            if (memeCommentsLength) {
-                const type = '(address, string, string, int, list(string), list(string))';
+            if (memeComments.value.length) {
+                type = '(address, string, string, int, list((addres,string,string)), list(string))';
             } else {
-                const type = '(address, string, string, int, list((addres,string,string)), list(string))';
+                type = '(address, string, string, int, list(string), list(string))';
             }
-            console.log("type:", type);
+
+            console.log(type);
 
             // The return type works for memes with no comments.
             // When a meme has comments the return type must be specified.
