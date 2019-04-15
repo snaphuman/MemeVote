@@ -9,7 +9,7 @@
     </head>
     <body>
         <div id="app">
-            <div class="columns">
+            <div class="columns" v-if="this.isLoading">
                 <div class="column is-full">
                     <div class="notification is-info">
                         <div class="loader"></div>

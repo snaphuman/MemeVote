@@ -30,6 +30,7 @@ Vue.config.devtools = "development";
 var app = new Vue({
     el: '#app',
     data: {
+        isLoading: false,
         title: pageTitle,
         memes: memeArray,
         memeUrl: "",
@@ -55,7 +56,9 @@ var app = new Vue({
     },
     methods: {
         async getClient() {
-            //this.client = await Ae.Aepp();
+
+            this.isLoading = true;
+
             this.client = await Ae.Wallet({
                 url: settings.url,
                 internalUrl: settings.internalUrl,
@@ -73,8 +76,10 @@ var app = new Vue({
                 networkId: settings.networkId,
                 nativeMode: true
             });
+            this.isLoading = false;
         },
         async callAEStatic (func, args, types) {
+            this.isLoading = true;
             const calledGet = await this.client.contractCallStatic(
                 settings.contractAddress, 'sophia-address', func, {args})
                   .catch(e => console.error(e));
@@ -84,6 +89,7 @@ var app = new Vue({
 
             console.log(decodedGet);
 
+            this.isLoading = false;
             return decodedGet;
         },
         async getMemesLength () {
@@ -92,6 +98,7 @@ var app = new Vue({
         },
         async getMeme(index) {
 
+            this.isLoading = true;
             const memeComments = await this.getMemeComments(index);
             let type;
 
@@ -102,6 +109,8 @@ var app = new Vue({
             }
 
             console.log(type);
+
+            this.isLoading = true;
 
             // The return type works for memes with no comments.
             // When a meme has comments the return type must be specified.
