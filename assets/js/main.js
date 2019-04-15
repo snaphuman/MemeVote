@@ -35,7 +35,16 @@ var app = new Vue({
         memeUrl: "",
         memeTags: "",
         userNickname: "",
-        client: null
+        client: null,
+        callOpts: {
+            deposit: 0,
+            gasPrice: 1000000000,
+            amount: 0,
+            fee: null, // sdk will automatically select this
+            gas: 1000000,
+            callData: '',
+            verify: true
+        }
     },
     head: {
         title: {
@@ -61,7 +70,8 @@ var app = new Vue({
                 onChain: true,
                 onAccount: true,
                 onContract: true,
-                networkId: settings.networkId
+                networkId: settings.networkId,
+                nativeMode: true
             });
         },
         async callAEStatic (func, args, types) {
@@ -91,7 +101,7 @@ var app = new Vue({
             } else {
                 const type = '(address, string, string, int, list((addres,string,string)), list(string))';
             }
-            console.log("type:", type)
+            console.log("type:", type);
 
             // The return type works for memes with no comments.
             // When a meme has comments the return type must be specified.
@@ -109,18 +119,33 @@ var app = new Vue({
                                      '(list((address,string,string)))'
                                     );
         },
-        async contractAECall(func, args, value, types) {
-            const calledSet = await this.client.contractCall(settings.contractAddress,
-                                                        'sophia-address',
-                                                        settings.contractAddress,
-                                                        func,
-                                                        {args, options: {amount:value}})
-                  .catch(async (e) => {
-                      const decodedError = await this.client.contractDecodeData(types,
-                                                                                e.returnValue)
-                            .catch(e => console.error(e));
-                  });
-            return;
+        async onCallDataAndFunctionAsync(func, args, types) {
+            const extraOpts = {
+                'owner': settings.account.pub
+            };
+
+            const opts = Object.assign(extraOpts, this.callOpts);
+            if (func && args && types) {
+                try {
+                    const dataRes = await this.contractAECall(func, args, opts);
+                    if (types !== '()') {
+                        const data = await this.client.contractDecodeData(types, dataRes.result.returnValue);
+                        console.log(data);
+                        return data;
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
+            } else {
+                console.log('Please enter a Function and 1 or more Arguments.');
+            }
+        },
+        contractAECall(func, args, options) {
+            return this.client.contractCall(settings.contractAddress,
+                                            'sophia-address',
+                                            settings.contractAddress,
+                                            func,
+                                            { args, options });
         },
         async registerMeme(){
 
@@ -129,9 +154,8 @@ var app = new Vue({
                   index = memeArray.length + 1,
                   tags = this.memeTags.split(",");
 
-            await this.contractAECall('registerMeme',
+            await this.onCallDataAndFunctionAsync('registerMeme',
                                  `("${url}","${user}",["test"])`,
-                                 0,
                                  '(int)');
 
             memeArray.push({
