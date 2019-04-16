@@ -9,7 +9,7 @@ var memeCardTemplate = `
             <div class="tags">
               <span class="tag is-danger"
               v-for="tag in meme.tags"
-              >{{ tag.value }}</span>
+              >{{ tag.value || tag }}</span>
           </header>
           <div class="card-image">
               <figure class="image is-1">
