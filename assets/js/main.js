@@ -66,15 +66,15 @@ var app = new Vue({
                     keypair: {
                         secretKey: settings.account.priv,
                         publicKey: settings.account.pub
-                    }
+                    },
+                    networkId: settings.networkId
                 })],
                 address: settings.account.pub,
-                onTx: true,
-                onChain: true,
-                onAccount: true,
-                onContract: true,
-                networkId: settings.networkId,
-                nativeMode: true
+                onTx: confirm,
+                onChain: confirm,
+                onAccount: confirm,
+                onContract: confirm,
+                networkId: settings.networkId
             });
             this.isLoading = false;
         },
@@ -150,11 +150,14 @@ var app = new Vue({
             }
         },
         contractAECall(func, args, options) {
+
+            console.log(`calling a function on a deployed contract with func: ${func}, args: ${args} and options:`, options);
             return this.client.contractCall(settings.contractAddress,
                                             'sophia-address',
                                             settings.contractAddress,
                                             func,
                                             { args, options });
+
         },
         async registerMeme(){
 
@@ -164,8 +167,8 @@ var app = new Vue({
                   tags = this.memeTags.split(",");
 
             await this.onCallDataAndFunctionAsync('registerMeme',
-                                 `("${url}","${user}",["test"])`,
-                                 '(int)');
+                                                  `("${url}","${user}",["test"])`,
+                                                  'int');
 
             memeArray.push({
                 creatorName: user,
