@@ -59,23 +59,17 @@ var app = new Vue({
 
             this.isLoading = true;
 
-            this.client = await Ae.Wallet({
+            this.client = await Ae.Universal({
                 url: settings.url,
                 internalUrl: settings.internalUrl,
-                account: [Ae.MemoryAccount({
-                    keypair: {
-                        secretKey: settings.account.priv,
-                        publicKey: settings.account.pub
-                    },
-                    networkId: settings.networkId
-                })],
-                address: settings.account.pub,
-                onTx: confirm,
-                onChain: confirm,
-                onAccount: confirm,
-                onContract: confirm,
+                keypair: {
+                    secretKey: settings.account.priv,
+                    publicKey: settings.account.pub
+                },
+                nativeMode: true,
                 networkId: settings.networkId
             });
+
             this.isLoading = false;
         },
         async callAEStatic (func, args, types) {
