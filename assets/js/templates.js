@@ -28,10 +28,10 @@ var memeCardTemplate = `
                               <form class="has-text-centered">
                                   <div class="field has-addons has-addons-centered">
                                       <div class="control">
-                                          <input class="input is-expanded" type="number" placeholder="add ættos for this meme">
+                                          <input class="input is-expanded" type="number" placeholder="add ættos for this meme" v-model="voteValue">
                                       </div>
                                       <div class="control">
-                                          <a class="button is-info">
+                                          <a class="button is-info" v-on:click="voteMeme($event)">
                                               Vote
                                           </a>
                                       </div>

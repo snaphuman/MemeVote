@@ -8,14 +8,41 @@ var pageTitle = "Meme Voting";
 
 var memeCard = Vue.component('meme-card', {
     props: {
-        meme: Object
+        meme: Object,
+        client: Object
     },
     data: function(){
         return {
+            client: null,
+            voteValue: null,
+            isLoading: false,
             comments: this.meme.comments
         };
     },
-    template: memeCardTemplate
+    template: memeCardTemplate,
+    methods: {
+       async voteMeme (event) {
+
+            console.log(this);
+
+            this.isLoading = true;
+
+            let index = this._uid;
+            let value = this.voteValue;
+
+            console.log(index, value);
+
+           await operations.onCallDataAndFunctionAsync(
+               this.client,
+               'voteMeme',
+               `(${index})`,
+               {'amount':value},
+               '(int)');
+
+            this.isLoading = false;
+
+        }
+    }
 });
 
 var memeComment = Vue.component('meme-comment', {
@@ -122,37 +149,6 @@ var app = new Vue({
                                      '(list((address,string,string)))'
                                     );
         },
-        async onCallDataAndFunctionAsync(func, args, types) {
-            const extraOpts = {
-                'owner': settings.account.pub
-            };
-
-            const opts = Object.assign(extraOpts, this.callOpts);
-            if (func && args && types) {
-                try {
-                    const dataRes = await this.contractAECall(func, args, opts);
-                    if (types !== '()') {
-                        const data = await this.client.contractDecodeData(types, dataRes.result.returnValue);
-                        console.log(data);
-                        return data;
-                    }
-                } catch (err) {
-                    console.log(err);
-                }
-            } else {
-                console.log('Please enter a Function and 1 or more Arguments.');
-            }
-        },
-        contractAECall(func, args, options) {
-
-            console.log(`calling a function on a deployed contract with func: ${func}, args: ${args} and options:`, options);
-            return this.client.contractCall(settings.contractAddress,
-                                            'sophia-address',
-                                            settings.contractAddress,
-                                            func,
-                                            { args, options });
-
-        },
         async registerMeme(){
 
             const url = this.memeUrl,
@@ -160,9 +156,12 @@ var app = new Vue({
                   index = memeArray.length + 1,
                   tags = this.memeTags.split(",");
 
-            await this.onCallDataAndFunctionAsync('registerMeme',
-                                                  `("${url}","${user}",["test"])`,
-                                                  'int');
+            await operations.onCallDataAndFunctionAsync(
+                this.client,
+                'registerMeme',
+                `("${url}","${user}",["test"])`,
+                {},
+                'int');
 
             memeArray.push({
                 creatorName: user,
