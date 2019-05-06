@@ -38,10 +38,10 @@ var memeCardTemplate = `
                                   </div>
                                   <div class="field has-addons has-addons-centered">
                                       <div class="control">
-                                          <input class="input is-expanded" type="text" placeholder="comment this meme">
+                                          <input class="input is-expanded" type="text" placeholder="comment this meme" v-model="comment">
                                       </div>
                                       <div class="control">
-                                          <a class="button is-info">
+                                          <a class="button is-info" v-on:click="commentMeme($event)">
                                               Comment
                                           </a>
                                       </div>

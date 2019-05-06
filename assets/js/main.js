@@ -16,6 +16,7 @@ var memeCard = Vue.component('meme-card', {
             client: null,
             voteValue: null,
             isLoading: false,
+            comment: "",
             comments: this.meme.comments
         };
     },
@@ -43,6 +44,23 @@ var memeCard = Vue.component('meme-card', {
 
            this.isLoading = false;
 
+       },
+        async commentMeme (event) {
+
+            this.isLoading = true;
+
+            let index = this._uid -1;
+            let comment = this.comment;
+            let author = "me";
+
+            await operations.onCallDataAndFunctionAsync(
+                this.client,
+                'commentMeme',
+                `(${index},"${comment}","${author}")`,
+                {},
+                '(int)');
+            
+            this.isLoading = false;
         }
     }
 });
@@ -126,7 +144,7 @@ var app = new Vue({
             let type;
 
             if (memeComments.value.length) {
-                type = '(address, string, string, int, list((addres,string,string)), list(string))';
+                type = '(address, string, string, int, list((address,string,string)), list(string))';
             } else {
                 type = '(address, string, string, int, list(string), list(string))';
             }
@@ -156,12 +174,12 @@ var app = new Vue({
             const url = this.memeUrl,
                   user = this.userNickname,
                   index = memeArray.length + 1,
-                  tags = this.memeTags.split(",");
+                  tags = this.memeTags.split(",").map( i=> `"${i}"`).join(',');
 
             await operations.onCallDataAndFunctionAsync(
                 this.client,
                 'registerMeme',
-                `("${url}","${user}",["test"])`,
+                `("${url}","${user}",[${tags}])`,
                 {},
                 'int');
 
