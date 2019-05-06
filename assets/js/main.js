@@ -27,7 +27,7 @@ var memeCard = Vue.component('meme-card', {
 
             this.isLoading = true;
 
-            let index = this._uid;
+            let index = this._uid - 1;
             let value = this.voteValue;
 
             console.log(index, value);
