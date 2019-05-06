@@ -51,7 +51,7 @@
                 </div>
             </div>
             <meme-card
-                v-for="meme in memes"
+                v-for="meme in sortedMemes"
                 v-bind:key="meme.index"
                 v-bind:meme="meme"
                 v-bind:client="client">

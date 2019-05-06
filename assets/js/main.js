@@ -39,7 +39,9 @@ var memeCard = Vue.component('meme-card', {
                {'amount':value},
                '(int)');
 
-            this.isLoading = false;
+           this.meme.votes += parseInt(value, 10);
+
+           this.isLoading = false;
 
         }
     }
@@ -197,5 +199,10 @@ var app = new Vue({
         }
 
         console.log(memeArray);
+    },
+    computed: {
+        sortedMemes: function() {
+            return this.memes.sort(function(a,b) {return b.votes-a.votes});
+        }
     }
 });
