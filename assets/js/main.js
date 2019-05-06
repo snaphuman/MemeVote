@@ -174,12 +174,13 @@ var app = new Vue({
             const url = this.memeUrl,
                   user = this.userNickname,
                   index = memeArray.length + 1,
-                  tags = this.memeTags.split(",").map( i=> `"${i}"`).join(',');
+                  tags = this.memeTags.split(","),
+                  stringTags = tags.map( i=> `"${i}"`).join(',');
 
             await operations.onCallDataAndFunctionAsync(
                 this.client,
                 'registerMeme',
-                `("${url}","${user}",[${tags}])`,
+                `("${url}","${user}",[${stringTags}])`,
                 {},
                 'int');
 
