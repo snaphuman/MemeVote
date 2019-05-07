@@ -17,6 +17,7 @@ var memeCard = Vue.component('meme-card', {
             voteValue: null,
             isLoading: false,
             comment: "",
+            commentAuthor: "",
             comments: this.meme.comments
         };
     },
@@ -51,7 +52,7 @@ var memeCard = Vue.component('meme-card', {
 
             let index = this._uid -1;
             let comment = this.comment;
-            let author = "me";
+            let author = this.commentAuthor;
 
             await operations.onCallDataAndFunctionAsync(
                 this.client,

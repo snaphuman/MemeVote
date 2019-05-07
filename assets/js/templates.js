@@ -36,14 +36,37 @@ var memeCardTemplate = `
                                           </a>
                                       </div>
                                   </div>
-                                  <div class="field has-addons has-addons-centered">
-                                      <div class="control">
-                                          <input class="input is-expanded" type="text" placeholder="comment this meme" v-model="comment">
+                                  <div class="field is-horizontal">
+                                      <div class="field-label">
+                                          <label class="label">Comment</label>
                                       </div>
-                                      <div class="control">
-                                          <a class="button is-info" v-on:click="commentMeme($event)">
-                                              Comment
-                                          </a>
+                                      <div class="field-body">
+                                        <div class="field">
+                                          <div class="control is-expanded">
+                                            <input class="input" type="text" placeholder="Your name" v-model="commentAuthor">
+                                          </div>
+                                        </div>
+                                        <div class="field">
+                                          <div class="control is-expanded">
+                                              <input class="input" type="text" placeholder="comment this meme" v-model="comment">
+                                          </div>
+                                        </div>
+                                     </div>
+                                     </div>
+
+                                     <div class="field is-horizontal">
+                                        <div class="field-label">
+                                          <!-- Left empty for spacing -->
+                                        </div>
+                                        <div class="field-body">
+                                          <div class="field">
+                                            <div class="control">
+                                              <button class="button is-primary" v-on:click="commentMeme($event)">
+                                                Comment
+                                              </button>
+                                            </div>
+                                          </div>
+                                        </div>
                                       </div>
                                   </div>
                               </form>
