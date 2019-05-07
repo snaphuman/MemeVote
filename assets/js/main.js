@@ -2,7 +2,7 @@ var memeArray = [];
 
 var memesLength = 0;
 
-var commentsArray = [];
+var commentArray = [];
 
 var pageTitle = "Meme Voting";
 
@@ -50,7 +50,7 @@ var memeCard = Vue.component('meme-card', {
 
             this.isLoading = true;
 
-            let index = this._uid -1;
+            let index = this._uid;
             let comment = this.comment;
             let author = this.commentAuthor;
 
@@ -60,6 +60,11 @@ var memeCard = Vue.component('meme-card', {
                 `(${index},"${comment}","${author}")`,
                 {},
                 '(int)');
+
+            this.meme.comments.push({
+                "comment": comment,
+                "author": author
+            });
             
             this.isLoading = false;
         }
@@ -205,15 +210,28 @@ var app = new Vue({
 
         for (let i = 1; i <= memesLength.value; i++ ) {
             const memeComments = await this.getMemeComments(i);
-
             const meme = await this.getMeme(i);
+
+            let commentsLength = memeComments.value.length;
+
+            commentArray = [];
+            if (commentsLength > 0) {
+                for (let c = 0; c < commentsLength; c++) {
+
+                    console.log(memeComments.value[c]);
+                    commentArray.push({
+                        "comment" : memeComments.value[c].value[2].value,
+                        "author" : memeComments.value[c].value[1].value
+                    });
+                }
+            }
 
             memeArray.push({
                 creatorName: meme.value[2].value,
                 memeUrl: meme.value[1].value,
                 index: i,
                 votes: meme.value[3].value,
-                comments: commentsArray,
+                comments: commentArray,
                 tags: meme.value[5].value
             });
         }
