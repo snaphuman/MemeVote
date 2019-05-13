@@ -112,7 +112,7 @@ var app = new Vue({
 
             this.isLoading = true;
 
-            this.client = await Ae.Universal();
+            this.client = await Ae.Aepp();
 
             this.isLoading = false;
         },
