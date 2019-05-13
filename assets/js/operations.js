@@ -1,7 +1,7 @@
 var operations = {
     async onCallDataAndFunctionAsync(client, func, args, options, types) {
             const extraOpts = {
-                'owner': settings.account.pub
+                //'owner': settings.account.pub
             };
 
             const opts = Object.assign(extraOpts, options);
