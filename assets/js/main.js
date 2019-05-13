@@ -173,8 +173,7 @@ var app = new Vue({
             await operations.onCallDataAndFunctionAsync(
                 this.contractInstance,
                 'registerMeme',
-                `("${url}","${user}",[${stringTags}])`,
-                {},
+                [url, user, stringTags],
                 'int');
 
             memeArray.push({

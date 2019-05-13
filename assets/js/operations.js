@@ -1,8 +1,8 @@
 var operations = {
-    async onCallDataAndFunctionAsync(instance, func, args, opts, types) {
+    async onCallDataAndFunctionAsync(instance, func, args, types) {
             if (func && args && types) {
                 try {
-                    const dataRes = await instance.call(func, args, opts);
+                    const dataRes = await instance.call(func, args);
                     if (types !== '()') {
                         const data = await dataRes.decode(types);
                         console.log(data);
