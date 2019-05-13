@@ -115,7 +115,7 @@ var app = new Vue({
 
             this.client = await Ae.Aepp();
 
-            this.contractInstance = await this.client.getContractInstance(contract.source, { contractAddress: settings.contractAddress });
+            this.contractInstance = await this.client.getContractInstance(source, { contractAddress: settings.contractAddress });
             console.log(this.contractInstance);
 
             this.isLoading = false;
