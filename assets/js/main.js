@@ -112,16 +112,7 @@ var app = new Vue({
 
             this.isLoading = true;
 
-            this.client = await Ae.Universal({
-                url: settings.url,
-                internalUrl: settings.internalUrl,
-                keypair: {
-                    secretKey: settings.account.priv,
-                    publicKey: settings.account.pub
-                },
-                nativeMode: true,
-                networkId: settings.networkId
-            });
+            this.client = await Ae.Universal();
 
             this.isLoading = false;
         },
