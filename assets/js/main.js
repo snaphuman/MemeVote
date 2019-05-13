@@ -90,6 +90,7 @@ var app = new Vue({
         memeTags: "",
         userNickname: "",
         client: null,
+        contractInstance: null,
         callOpts: {
             deposit: 0,
             gasPrice: 1000000000,
@@ -114,20 +115,15 @@ var app = new Vue({
 
             this.client = await Ae.Aepp();
 
+            this.contractInstance = await this.client.getContractInstance(contract.source, { contractAddress: settings.contractAddress });
+            console.log(this.contractInstance);
+
             this.isLoading = false;
         },
-        async callAEStatic (func, args, types) {
-            this.isLoading = true;
-            const calledGet = await this.client.contractCallStatic(
-                settings.contractAddress, 'sophia-address', func, {args})
-                  .catch(e => console.error(e));
-
-            const decodedGet = await this.client.contractDecodeData(types, calledGet.result.returnValue)
-                  .catch(e => console.error(e));
-
-            console.log(decodedGet);
-
-            this.isLoading = false;
+        async callAEStatic(func, args, types) {
+            const calledGet = await this.contractInstance.call(func, args, {callStatic: true}).catch(e => console.error(e));
+            //Make another call to decode the data received in first call
+            const decodedGet = await calledGet.decode().catch(e => console.error(e));
             return decodedGet;
         },
         async getMemesLength () {
@@ -175,7 +171,7 @@ var app = new Vue({
                   stringTags = tags.map( i=> `"${i}"`).join(',');
 
             await operations.onCallDataAndFunctionAsync(
-                this.client,
+                this.contractInstance,
                 'registerMeme',
                 `("${url}","${user}",[${stringTags}])`,
                 {},
