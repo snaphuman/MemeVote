@@ -121,7 +121,7 @@ var app = new Vue({
             this.isLoading = false;
         },
         async callAEStatic(func, args, types) {
-            if (func && args && types) {
+            if (func && args) {
                 try {
                     const res = await this.contractInstance.call(func, args);
                     return res.decode(types);
@@ -134,7 +134,7 @@ var app = new Vue({
         },
         async getMemesLength () {
 
-            return this.callAEStatic('getMemesLength', [], 'int');
+            return this.callAEStatic('getMemesLength', []);
         },
         async getMeme(index) {
 
