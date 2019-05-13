@@ -134,7 +134,7 @@ var app = new Vue({
         },
         async getMemesLength () {
 
-            return this.callAEStatic('getMemesLength', '()', 'int');
+            return this.callAEStatic('getMemesLength', []);
         },
         async getMeme(index) {
 
@@ -155,7 +155,7 @@ var app = new Vue({
             // The return type works for memes with no comments.
             // When a meme has comments the return type must be specified.
             return this.callAEStatic('getMeme',
-                                     `(${index})`,
+                                     [],
                                      `(${type})`);
         },
         async getMemeComments(index) {
