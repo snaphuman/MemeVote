@@ -136,7 +136,7 @@ var app = new Vue({
         },
         async getMemesLength () {
 
-            return this.callAEStatic('getMemesLength', []);
+            return this.callAEStatic('getMemesLength', `()`);
         },
         async getMeme(index) {
 
