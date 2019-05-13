@@ -121,10 +121,16 @@ var app = new Vue({
             this.isLoading = false;
         },
         async callAEStatic(func, args, types) {
-            const calledGet = await this.contractInstance.call(func, args, {callStatic: true}).catch(e => console.error(e));
-            //Make another call to decode the data received in first call
-            const decodedGet = await calledGet.decode().catch(e => console.error(e));
-            return decodedGet;
+            if (func && args && types) {
+                try {
+                    const res = await this.contractInstance.call(func, args);
+                    return res.decode(types);
+                } catch (err) {
+                    console.log(err);
+                }
+            } else {
+                console.log('Please enter a Function and 1 or more Arguments.');
+            }
         },
         async getMemesLength () {
 
@@ -173,7 +179,7 @@ var app = new Vue({
             await operations.onCallDataAndFunctionAsync(
                 this.contractInstance,
                 'registerMeme',
-                [url, user, stringTags],
+                [url, user, "["+stringTags+"]"],
                 'int');
 
             memeArray.push({
