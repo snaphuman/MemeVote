@@ -115,6 +115,8 @@ var app = new Vue({
 
             this.client = await Ae.Aepp();
 
+            console.log(source);
+
             this.contractInstance = await this.client.getContractInstance(source, { contractAddress: settings.contractAddress });
             console.log(this.contractInstance);
 
@@ -124,7 +126,7 @@ var app = new Vue({
             if (func && args) {
                 try {
                     const res = await this.contractInstance.call(func, args);
-                    return res.decode(types);
+                    return res.decode();
                 } catch (err) {
                     console.log(err);
                 }
