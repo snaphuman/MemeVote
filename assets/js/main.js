@@ -83,6 +83,7 @@ Vue.config.devtools = "development";
 var app = new Vue({
     el: '#app',
     data: {
+        runningInFrame: window.parent !== window,
         isLoading: false,
         title: pageTitle,
         memes: memeArray,
@@ -90,6 +91,7 @@ var app = new Vue({
         memeTags: "",
         userNickname: "",
         client: null,
+        contractInstance: null,
         callOpts: {
             deposit: 0,
             gasPrice: 1000000000,
@@ -108,30 +110,43 @@ var app = new Vue({
         }
     },
     methods: {
+        async getReverseWindow() {
+            const iframe = document.createElement('iframe')
+            iframe.src = prompt('Enter wallet URL', 'http://127.0.0.1:8080')
+            iframe.style.display = 'none'
+            document.body.appendChild(iframe)
+            await new Promise(resolve => {
+                const handler = ({ data }) => {
+                    if (data.method !== 'ready') return
+                    window.removeEventListener('message', handler)
+                    resolve()
+                }
+                window.addEventListener('message', handler)
+            })
+            return iframe.contentWindow
+        },
         async getClient() {
 
             this.isLoading = true;
 
-            this.client = await Ae.Universal({
-                url: settings.url,
-                internalUrl: settings.internalUrl,
-                keypair: {
-                    secretKey: settings.account.priv,
-                    publicKey: settings.account.pub
-                },
-                nativeMode: true,
-                networkId: settings.networkId
-            });
+            try {
+                this.client = await Ae.Aepp({
+                    parent: this.runningInFrame ? window.parent : await this.getReverseWindow()
+                });
+
+                this.contractInstance = await this.client.getContractInstance(settings.contractSource, { contractAddress: settings.contractAddress });
+            } catch (err) {
+                console.log(err);
+            }
 
             this.isLoading = false;
         },
         async callAEStatic (func, args, types) {
             this.isLoading = true;
-            const calledGet = await this.client.contractCallStatic(
-                settings.contractAddress, 'sophia-address', func, {args})
+            const calledGet = await this.contractInstance.call(func, args, {callStatic: true})
                   .catch(e => console.error(e));
 
-            const decodedGet = await this.client.contractDecodeData(types, calledGet.result.returnValue)
+            const decodedGet = await calledGet.decode()
                   .catch(e => console.error(e));
 
             console.log(decodedGet);
@@ -141,7 +156,7 @@ var app = new Vue({
         },
         async getMemesLength () {
 
-            return this.callAEStatic('getMemesLength', '()', 'int');
+            return this.callAEStatic('getMemesLength', []);
         },
         async getMeme(index) {
 
