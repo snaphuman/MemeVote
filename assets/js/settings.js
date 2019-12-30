@@ -1,10 +1,49 @@
 var settings = {
-    contractAddress: 'ct_2jLe9o6t3XJDV2iwAChQUNW4obT6YjnFawXctFqffNbo1YfC3r',
-    account: {
-        pub: 'ak_6A2vcm1Sz6aqJezkLCssUXcyZTX7X8D5UwbuS2fRJr9KkYpRU',
-        priv: 'a7a695f999b1872acb13d5b63a830a8ee060ba688a478a08c6e65dfad8a01cd70bb4ed7927f97b51e1bcb5e1340d12335b2a2b12c8bc5221d63c4bcb39d41e61'
-    },
-    url: 'https://sdk-testnet.aepps.com',
-    internalUrl: 'https://sdk-testnet.aepps.com',
-    networkId: 'ae_uat'
+    contractAddress: "ct_ScrfpvWB3jupogyNcSEq2VVHMYc6PQKZL34A9yRK4TAd5ZaL8",
+    contractSource: `payable contract MemeVote =
+  record meme  =
+    { creatorAddress : address,
+      url            : string,
+      name           : string,
+      voteCount      : int,
+      comments       : list(comment),
+      tags           : list(string)}
+  record comment =
+    { authorAddress : address,
+      author        : string,
+      comment       : string}
+  record state = {
+    memes       : map(int, meme),
+    memesLength : int}
+  entrypoint init() = {
+    memes = {},
+    memesLength = 0}
+  entrypoint getMeme(index: int) : meme =
+    switch(Map.lookup(index, state.memes))
+      None    => abort("No meme was found.")
+      Some(x) =>  x
+  stateful entrypoint registerMeme(url' : string, name' : string, tags' : list(string)) =
+    let meme = { creatorAddress = Call.caller, url = url', name = name', voteCount = 0, comments = [], tags = tags'}
+    let index = getMemesLength() + 1
+    put(state {memes[index] = meme, memesLength = index})
+  entrypoint getMemesLength() : int =
+    state.memesLength
+  stateful entrypoint voteMeme(index: int) =
+    let meme = getMeme(index)
+    Chain.spend(meme.creatorAddress, Call.value)
+    let updatedVoteCount = meme.voteCount + Call.value
+    let updatedMemes = state.memes{ [index].voteCount = updatedVoteCount }
+    put(state {memes = updatedMemes})
+  stateful entrypoint commentMeme(index: int, comment': string, author': string) =
+    let meme = getMeme(index)
+    let comments = meme.comments
+    let comment = {authorAddress = Call.caller, author = author', comment = comment'}
+    let updatedComment =  comment::comments
+    let updatedMemes = state.memes{ [index].comments = updatedComment }
+    put(state {memes = updatedMemes})
+  // Return type: (list((address,string,string)))
+  entrypoint getMemeComments(index: int) =
+    let meme = getMeme(index)
+    meme.comments
+`
 };
