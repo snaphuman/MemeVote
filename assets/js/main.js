@@ -34,8 +34,7 @@ var memeCard = Vue.component('meme-card', {
 
             console.log(index, value);
 
-           await operations.onCallDataAndFunctionAsync(
-               this.client,
+           await this.callAEContract(
                'voteMeme',
                `(${index})`,
                {'amount':value},
@@ -54,8 +53,7 @@ var memeCard = Vue.component('meme-card', {
             let comment = this.comment;
             let author = this.commentAuthor;
 
-            await operations.onCallDataAndFunctionAsync(
-                this.client,
+            await this.callAEContract(
                 'commentMeme',
                 `(${index},"${comment}","${author}")`,
                 {},
@@ -154,6 +152,15 @@ var app = new Vue({
             this.isLoading = false;
             return decodedGet;
         },
+
+        async callAEContract(func, args, value) {
+            this.isLoading = true;
+
+            const calledSet = await this.contractInstance.call(func, args, {amount: value}).catch(e => console.error(e));
+            this.isLoading = false;
+            return calledSet;
+        },
+
         async getMemesLength () {
 
             return this.callAEStatic('getMemesLength', []);
@@ -164,7 +171,7 @@ var app = new Vue({
             const memeComments = await this.getMemeComments(index);
             let type;
 
-            if (memeComments.value.length) {
+            if (!memeComments.length) {
                 type = '(address, string, string, int, list((address,string,string)), list(string))';
             } else {
                 type = '(address, string, string, int, list(string), list(string))';
@@ -177,8 +184,7 @@ var app = new Vue({
             // The return type works for memes with no comments.
             // When a meme has comments the return type must be specified.
             return this.callAEStatic('getMeme',
-                                     `(${index})`,
-                                     `(${type})`);
+                                     [index]);
         },
         async getMemeComments(index) {
             // this is used to get the comments length and set de correct
@@ -186,9 +192,7 @@ var app = new Vue({
 
 
             return this.callAEStatic('getMemeComments',
-                                     `(${index})`,
-                                     '(list((address,string,string)))'
-                                    );
+                                     [index]);
         },
         async registerMeme(){
 
@@ -198,12 +202,10 @@ var app = new Vue({
                   tags = this.memeTags.split(","),
                   stringTags = tags.map( i=> `"${i}"`).join(',');
 
-            await operations.onCallDataAndFunctionAsync(
-                this.client,
+            await this.callAEContract(
                 'registerMeme',
-                `("${url}","${user}",[${stringTags}])`,
-                {},
-                'int');
+                [url, user, tags],
+                0);
 
             memeArray.push({
                 creatorName: user,
@@ -221,13 +223,12 @@ var app = new Vue({
         console.log(this.client);
 
         const memesLength = await this.getMemesLength();
-        console.log(memesLength.value);
 
-        for (let i = 1; i <= memesLength.value; i++ ) {
+        for (let i = 1; i <= memesLength; i++ ) {
             const memeComments = await this.getMemeComments(i);
             const meme = await this.getMeme(i);
 
-            let commentsLength = memeComments.value.length;
+            let commentsLength = memeComments.length;
 
             commentArray = [];
             if (commentsLength > 0) {
@@ -242,12 +243,12 @@ var app = new Vue({
             }
 
             memeArray.push({
-                creatorName: meme.value[2].value,
-                memeUrl: meme.value[1].value,
+                creatorName: meme.name,
+                memeUrl: meme.url,
                 index: i,
-                votes: meme.value[3].value,
+                votes: meme.voteCount,
                 comments: commentArray,
-                tags: meme.value[5].value
+                tags: meme.tags
             });
         }
 
