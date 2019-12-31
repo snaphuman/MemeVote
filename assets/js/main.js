@@ -85,18 +85,18 @@ var memeCard = Vue.component('meme-card', {
 
             this.isLoading = true;
 
-            let index = this._uid - 1;
+            let index = this._uid;
             let value = this.voteValue;
 
             console.log(index, value);
 
            await this.callAEContract(
                'voteMeme',
-               `(${index})`,
-               {'amount':value},
-               '(int)');
+               [index],
+               value);
 
-           this.meme.votes += parseInt(value, 10);
+           this.meme.votes = parseInt(this.meme.votes, 10) + parseInt(value, 10);
+           this.voteValue = null;
 
            this.isLoading = false;
 
@@ -232,7 +232,7 @@ var app = new Vue({
                 creatorName: user,
                 memeUrl: url,
                 index: index,
-                votes: 0,
+                votes: meme.voteCount,
                 comments: [],
                 tags: tags
             });
