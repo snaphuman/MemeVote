@@ -28,7 +28,7 @@ var settings = {
     put(state {memes[index] = meme, memesLength = index})
   entrypoint getMemesLength() : int =
     state.memesLength
-  stateful entrypoint voteMeme(index: int) =
+  payable stateful entrypoint voteMeme(index: int) =
     let meme = getMeme(index)
     Chain.spend(meme.creatorAddress, Call.value)
     let updatedVoteCount = meme.voteCount + Call.value
