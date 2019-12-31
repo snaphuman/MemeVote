@@ -122,6 +122,10 @@ var memeCard = Vue.component('meme-card', {
             
             this.isLoading = false;
         }
+    },
+    async created (){
+
+        await this.getContractInstance();
     }
 });
 
@@ -237,6 +241,7 @@ var app = new Vue({
     async created (){
 
         await this.getClient();
+        await this.getContractInstance();
         console.log(this.client);
 
         const memesLength = await this.getMemesLength();
