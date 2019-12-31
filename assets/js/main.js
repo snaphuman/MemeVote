@@ -6,14 +6,70 @@ var commentArray = [];
 
 var pageTitle = "Meme Voting";
 
+var aeternityMixin = {
+    data: {
+        client: {},
+        contractInstance: null,
+        callOpts: {
+            deposit: 0,
+            gasPrice: 1000000000,
+            amount: 0,
+            fee: null, // sdk will automatically select this
+            gas: 1000000,
+            callData: '',
+            verify: true
+        }
+    },
+    methods: {
+        async callAEContract(func, args, value) {
+            this.isLoading = true;
+
+            const calledSet = await this.contractInstance.call(func, args, {amount: value}).catch(e => console.error(e));
+            this.isLoading = false;
+            return calledSet;
+        },
+        async callAEStatic (func, args, types) {
+            this.isLoading = true;
+            const calledGet = await this.contractInstance.call(func, args, {callStatic: true})
+                  .catch(e => console.error(e));
+
+            const decodedGet = await calledGet.decode()
+                  .catch(e => console.error(e));
+
+            console.log(decodedGet);
+
+            this.isLoading = false;
+            return decodedGet;
+        },
+        async getContractInstance() {
+                this.contractInstance = await this.client.getContractInstance(settings.contractSource, { contractAddress: settings.contractAddress });
+        },
+        async getClient() {
+
+            this.isLoading = true;
+
+            try {
+                this.client = await Ae.Aepp({
+                    parent: this.runningInFrame ? window.parent : await this.getReverseWindow()
+                });
+
+            } catch (err) {
+                console.log(err);
+            }
+
+            this.isLoading = false;
+        }
+    }
+}
+
 var memeCard = Vue.component('meme-card', {
+    mixins: [aeternityMixin],
     props: {
         meme: Object,
         client: Object
     },
     data: function(){
         return {
-            client: null,
             voteValue: null,
             isLoading: false,
             comment: "",
@@ -80,6 +136,7 @@ Vue.config.devtools = "development";
 
 var app = new Vue({
     el: '#app',
+    mixins: [aeternityMixin],
     data: {
         runningInFrame: window.parent !== window,
         isLoading: false,
@@ -88,8 +145,6 @@ var app = new Vue({
         memeUrl: "",
         memeTags: "",
         userNickname: "",
-        client: null,
-        contractInstance: null,
         callOpts: {
             deposit: 0,
             gasPrice: 1000000000,
@@ -123,44 +178,6 @@ var app = new Vue({
             })
             return iframe.contentWindow
         },
-        async getClient() {
-
-            this.isLoading = true;
-
-            try {
-                this.client = await Ae.Aepp({
-                    parent: this.runningInFrame ? window.parent : await this.getReverseWindow()
-                });
-
-                this.contractInstance = await this.client.getContractInstance(settings.contractSource, { contractAddress: settings.contractAddress });
-            } catch (err) {
-                console.log(err);
-            }
-
-            this.isLoading = false;
-        },
-        async callAEStatic (func, args, types) {
-            this.isLoading = true;
-            const calledGet = await this.contractInstance.call(func, args, {callStatic: true})
-                  .catch(e => console.error(e));
-
-            const decodedGet = await calledGet.decode()
-                  .catch(e => console.error(e));
-
-            console.log(decodedGet);
-
-            this.isLoading = false;
-            return decodedGet;
-        },
-
-        async callAEContract(func, args, value) {
-            this.isLoading = true;
-
-            const calledSet = await this.contractInstance.call(func, args, {amount: value}).catch(e => console.error(e));
-            this.isLoading = false;
-            return calledSet;
-        },
-
         async getMemesLength () {
 
             return this.callAEStatic('getMemesLength', []);
