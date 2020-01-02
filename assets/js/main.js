@@ -10,15 +10,6 @@ var aeternityMixin = {
     data: {
         client: {},
         contractInstance: null,
-        callOpts: {
-            deposit: 0,
-            gasPrice: 1000000000,
-            amount: 0,
-            fee: null, // sdk will automatically select this
-            gas: 1000000,
-            callData: '',
-            verify: true
-        }
     },
     methods: {
         async callAEContract(func, args, value) {
@@ -118,7 +109,7 @@ var memeCard = Vue.component('meme-card', {
                 "comment": comment,
                 "author": author
             });
-            
+
             this.isLoading = false;
         }
     },
@@ -148,15 +139,6 @@ var app = new Vue({
         memeUrl: "",
         memeTags: "",
         userNickname: "",
-        callOpts: {
-            deposit: 0,
-            gasPrice: 1000000000,
-            amount: 0,
-            fee: null, // sdk will automatically select this
-            gas: 1000000,
-            callData: '',
-            verify: true
-        }
     },
     head: {
         title: {
@@ -188,16 +170,8 @@ var app = new Vue({
         async getMeme(index) {
 
             this.isLoading = true;
+
             const memeComments = await this.getMemeComments(index);
-            let type;
-
-            if (!memeComments.length) {
-                type = '(address, string, string, int, list((address,string,string)), list(string))';
-            } else {
-                type = '(address, string, string, int, list(string), list(string))';
-            }
-
-            console.log(type);
 
             this.isLoading = true;
 
