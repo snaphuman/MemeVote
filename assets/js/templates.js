@@ -61,9 +61,9 @@ var memeCardTemplate = `
                                         <div class="field-body">
                                           <div class="field">
                                             <div class="control">
-                                              <button class="button is-primary" v-on:click="commentMeme($event)">
+                                              <a class="button is-primary" v-on:click="commentMeme($event)">
                                                 Comment
-                                              </button>
+                                              </a>
                                             </div>
                                           </div>
                                         </div>

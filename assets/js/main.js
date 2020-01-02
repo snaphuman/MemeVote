@@ -111,9 +111,8 @@ var memeCard = Vue.component('meme-card', {
 
             await this.callAEContract(
                 'commentMeme',
-                `(${index},"${comment}","${author}")`,
-                {},
-                '(int)');
+                [index, comment, author],
+                0);
 
             this.meme.comments.push({
                 "comment": comment,
@@ -252,14 +251,13 @@ var app = new Vue({
 
             let commentsLength = memeComments.length;
 
-            commentArray = [];
+            let commentArray = [];
             if (commentsLength > 0) {
                 for (let c = 0; c < commentsLength; c++) {
 
-                    console.log(memeComments.value[c]);
                     commentArray.push({
-                        "comment" : memeComments.value[c].value[2].value,
-                        "author" : memeComments.value[c].value[1].value
+                        "comment" : memeComments[0].comment,
+                        "author" : memeComments[0].author
                     });
                 }
             }
@@ -273,8 +271,6 @@ var app = new Vue({
                 tags: meme.tags
             });
         }
-
-        console.log(memeArray);
     },
     computed: {
         sortedMemes: function() {
