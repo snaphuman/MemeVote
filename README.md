@@ -135,7 +135,7 @@ http://localhost:8080 abd http://localhost:8081 respectively.
 
 ## Enable blockchain interaction
 
-Both applications are running but there are some tasks to be completed to make
+Both applications are running, but there are some tasks to be completed to make
 them work properly: 1) Initialize aeternity nodes and compiler, 2) deploy the
 contract, 3) configure the wallet, 4) setup the contract address in MemeVote
 daepp.
@@ -179,6 +179,29 @@ the default wallets should be successfully funded.
   ...
   ...
   ```
+  
+  *note:* If you are running docker within a machine with selinux enabled, you
+  should run containers in privileged mode. This can be achieved adding the
+  `privileged: true` option for each container in the services block in the
+  `docker-compose.yml` file as follows: 
+  
+  ```
+  node1:
+    image: aeternity/aeternity:v5.0.2
+    hostname: node1
+    privileged: true
+    environment:
+      AETERNITY_CONFIG: /home/aeternity/aeternity.yaml
+    command: >
+       bin/aeternity console -noinput -aehttp enable_debug_endpoints true
+    volumes:
+      - ./docker/aeternity_node1_mean15.yaml:/home/aeternity/aeternity.yaml
+      - ./docker/keys/node1:/home/aeternity/node/keys
+    ....
+    ....
+    ....
+  
+  ```
 
 * Initialize ae_sophia compiler
   ```
@@ -212,3 +235,45 @@ Finally you can list existing docker containers
   7a93a030c23c        aeternity/aeternity:v5.0.2       "bin/aeternity con..."   11 minutes ago      Up 11 minutes (healthy)   3013-3015/tcp, 3113/tcp                    memevote-aeproject_node1_1
 
   ```
+
+### Deploy sophia smart contract
+
+* First we need to add the MemeVote contract to the Deployer configuration in
+the `./deployment/deploy.js` file. Note that during initialization, aeproject
+created an example contract which can be keeped or replaced for the new one.
+
+  ``` javascript
+    const Deployer = require('aeproject-lib').Deployer;
+
+    const deploy = async (network, privateKey, compiler, networkId) => {
+        let deployer = new Deployer(network, privateKey, compiler, networkId)
+
+        await deployer.deploy("./contracts/ExampleContract.aes")
+        await deployer.deploy("./MemeVote/contracts/MemeVote.aes")
+    };
+
+    module.exports = {
+        deploy
+    };
+
+  ```
+
+* Run de deploy operation
+
+  ``` shell
+  aeproject deploy
+
+  ===== Contract: ExampleContract.aes has been deployed at ct_2TjCTxSiLyQ3ADMTiozZPYkYnLQ1NSXaLp9GD7jX7tpJGoaJsd =====
+  ===== Contract: MemeVote.aes has been deployed at ct_2n1MVAiBLWi7zK4dm4UvAfrziu4xK1AKE9zcYC99TKeiPw2LKN =====
+  Your deployment script finished successfully!
+
+  ```
+  
+This operation by default deploys the contract on the local network. We can use
+the following options to deploy the contract in the testnet:
+
+``` shell
+  aeproject deploy --network "https://sdk-testnet.aepps.com" --networkId "ae_uat" --compiler "https://compiler.aepps.com"
+
+```
+
