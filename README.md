@@ -60,10 +60,13 @@ flavor](https://github.com/aeternity/aepp-sdk-js/blob/develop/docs/api/ae/aepp.m
 to interact with whe deployed contract. These components are integrated via RPC,
 so all methods from the Aepp are confirmed by the wallet.
 
-For this deployment we will use aepp-aeproject-shape-vue project, as it
-implements an identity provider which and configure it accordingly to our needs
+For this deployment we will use
+[aepp-aeproject-shape-vue](https://github.com/aeternity/aepp-aeproject-shape-vue)
+project, as it implements an identity provider which may be configured
+accordingly to our needs.
 
 TODO: Components diagram
+
 TODO: Sequence diagram
 
 ## Running the project 
@@ -100,10 +103,112 @@ TODO: Sequence diagram
 I have forked this [awesome
 project](https://github.com/aeternity/aepp-aeproject-shape-vue) because it
 includes the base functionality of the identity provider, which is in other
-words a configurable wallet. This fork udd some UI improvements that facilitates
+words a configurable wallet. This fork add some UI improvements that facilitates
 the configuration and conntection to the network. Try it out!
 
   ```
   git clone https://github.com/snaphuman/aepp-aeproject-shape-vue.git 
+
+  ```
+
+On each cloned repository folder (MemeVote and aepp-aeproject) fetch all their
+dependencies.
+
+  ```
+  npm install
+
+  ```
+
+* Run both applications
+
+  ```
+  # In Meme vote folder run:
+  npm start
+
+  # In aepp-aeproject-shape-vue run:
+  npm run serve
+
+  ```
+
+At this point both applications can be accessed in the browser at
+http://localhost:8080 abd http://localhost:8081 respectively.
+
+## Enable blockchain interaction
+
+Both applications are running but there are some tasks to be completed to make
+them work properly: 1) Initialize aeternity nodes and compiler, 2) deploy the
+contract, 3) configure the wallet, 4) setup the contract address in MemeVote
+daepp.
+
+### Intitialize aeternity nodes and compiler
+
+As described before, AEproject was installed globally in our local machine and
+initialized inside the MemeVote-aeproject folder. This initialization created
+many files and folders related to docker and smart contract interactions. This
+means that all operations with the nodes and contract should be executed at that
+path level.
+
+*note:* To run aeternity nodes make sure to have docker service up and running.
+
+* Initialize aeternity nodes
+  ```
+  aeproject node
+
+  ```
+
+At the end of this process, the nodes should be successfully started, and the
+the default wallets should be successfully funded.
+
+  ```
+  ===== Starting Node =====
+  Creating network "memevote-aeproject_default" with the default driver
+
+  Creating memevote-aeproject_node1_1 ... done
+  Creating memevote-aeproject_proxy_1 ... done
+  Creating memevote-aeproject_node3_1 ... done
+  Creating memevote-aeproject_node2_1 ... done
+
+  .................
+  ===== Node was successfully started! =====
+  ===== Funding default wallets! =====
+  Miner ------------------------------------------------------------
+  public key: ak_2mwRmUeYmfuW93ti9HMSUJzCk1EYcQEfikVSzgo6k2VghsWhgU
+  private key: bb9f0b01c8c9553cfbaf7ef81a50f977b1326801ebf7294d1c2cbccdedf27476e9bbf604e611b5460a3b3999e9771b6f60417d73ce7c5519e12f7e127a1225ca
+  Wallet's balance is 750440000000000000000
+  ...
+  ...
+  ...
+  ```
+
+* Initialize ae_sophia compiler
+  ```
+  aeproject compiler
+
+  ```
+
+At the end of this procees the compiler should be successfully started
+
+```
+  ===== Starting Compiler =====
+
+  Creating memevote-aeproject_compiler_1 ...
+  Creating memevote-aeproject_compiler_1 ... done
+  .
+  ..................
+  ===== Compiler was successfully started! =====
+
+```
+
+Finally you can list existing docker containers
+
+  ```
+  docker ps
+
+  CONTAINER ID        IMAGE                            COMMAND                  CREATED             STATUS                    PORTS                                      NAMES
+  e3e1b576a07a        aeternity/aesophia_http:v4.0.0   "/docker-entrypoin..."   2 minutes ago       Up 2 minutes (healthy)    0.0.0.0:3080->3080/tcp                     memevote-aeproject_compiler_1
+  2f0e9a20415c        aeternity/aeternity:v5.0.2       "bin/aeternity con..."   11 minutes ago      Up 11 minutes (healthy)   3013-3015/tcp, 3113/tcp                    memevote-aeproject_node3_1
+  e4793f9841f8        aeternity/aeternity:v5.0.2       "bin/aeternity con..."   11 minutes ago      Up 11 minutes (healthy)   3013-3015/tcp, 3113/tcp                    memevote-aeproject_node2_1
+  ae58970cad24        nginx:1.13.8                     "nginx -g 'daemon ..."   11 minutes ago      Up 11 minutes             80/tcp, 0.0.0.0:3001-3003->3001-3003/tcp   memevote-aeproject_proxy_1
+  7a93a030c23c        aeternity/aeternity:v5.0.2       "bin/aeternity con..."   11 minutes ago      Up 11 minutes (healthy)   3013-3015/tcp, 3113/tcp                    memevote-aeproject_node1_1
 
   ```
