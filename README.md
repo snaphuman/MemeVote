@@ -276,4 +276,49 @@ created an example contract which can be keeped or replaced for the new one.
   aeproject deploy --network "https://sdk-testnet.aepps.com" --networkId "ae_uat" --compiler "https://compiler.aepps.com"
 
   ```
+  
+* Verify the deployed contract
 
+  Once the contract is deployed it can be verified in the network
+  
+  ``` shell
+  aeproject history
+  
+  |---------------|-------------------------------------------------------|
+  | Event Time    | 25 Jan, 07:31:15                                      |
+  |---------------|-------------------------------------------------------|
+  │ Public Key    │ ak_2mwRmUeYmfuW93ti9HMSUJzCk1EYcQEfikVSzgo6k2VghsWhgU │
+  |---------------|-------------------------------------------------------|
+  │ Executor      │ Deployer                                              │
+  |---------------|-------------------------------------------------------|
+  │ Name or Label │ MemeVote                                              │
+  |---------------|-------------------------------------------------------|
+  │ Tx Hash       │ th_2Ly2WUuQ4dJwbNuCc6PmUQ5jVva9AgVRB7T1nA91xACvtgqnGQ │
+  |---------------|-------------------------------------------------------|
+  | Status        │ Success                                               │
+  |---------------|-------------------------------------------------------|
+  │ Gas Price     │ 1000000000                                            │
+  |---------------|-------------------------------------------------------|
+  │ Gas Used      │ 110                                                   │
+  |---------------|-------------------------------------------------------|
+  │ Result        │ ct_ptyi4G4GehmMYNM1gwDTVKGrUesgbVthZgp2762dTyhoEX188  │
+  |---------------|-------------------------------------------------------|
+  │ Network ID    │ ae_devnet                                             │
+  |---------------|-------------------------------------------------------|
+
+  ```
+  Note that if you deploy the contract on the testnet or the local network, it
+  appears referenced in the Network ID field of the returned table.
+  
+  Also, if the contract was deployed on the testnet, it also can be verified
+  online in the network explorer at https://explorer.testnet.aeternity.io/
+
+### Configure wallet
+
+As I mentioned before, I have forked the aepp-aeproject-shape-vue that adds a
+ConfigClient component which provides a form that allows to input the public and
+private key of the wallet account, select the network to connect to and input
+the url of the MemeVote aepp.
+
+Instead of use this fork we can use the original aepp-aeproject-shape-vue but it
+has to be configured directly in the source code.
