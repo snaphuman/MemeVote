@@ -44,13 +44,13 @@ which allows to interact with the network.
 ### Git
 Make control version to the source code is a good practice that keeps track of
 the changes during development. As this daepp is deployed as Github page, changes
-are pushed only when its state of is functional.
+are pushed only when its functional state is stable.
 
 ### Http server
 As MemeVote daepp design is browser based, which means that its javascript
 modules like the aepps SDK, vue.js libraries and so forth are loaded by html
 script tags, it should be deployed with an http-server in a predefined port
-instead of loading the index.html file in the browser.
+instead of loading the index.html file directly in the browser.
 
 ## Aepp Architecture
 This Aepp has two main components: 1) the identity provider and 2) the Aeep
@@ -74,54 +74,54 @@ TODO: Sequence diagram
 * Create an empty directory which will hold the node infraestructure, the
   identity provider and the MemeVote Aepp:
   
-  ```
+  ``` shell
   mkdir MemeVote-aeproject
   ``` 
   
 * Install aeproject globally
 
-  ```
+  ``` shell
   npm install -g aeproject
   ```
 
 * Initialize aeproject
 
-  ```
+  ``` shell
   cd MemeVote-aeproject
   aeproject init
   ```
 
 * Clone the MemeVote daepp
 
-  ```
+  ``` shell
   git clone https://github.com/aeternity/aepp-aeproject-js
 
   ```
   
 * Clone aepp-aeproject-shape-vue
 
-I have forked this [awesome
-project](https://github.com/aeternity/aepp-aeproject-shape-vue) because it
-includes the base functionality of the identity provider, which is in other
-words a configurable wallet. This fork add some UI improvements that facilitates
-the configuration and conntection to the network. Try it out!
+  I have forked this [awesome
+  project](https://github.com/aeternity/aepp-aeproject-shape-vue) because it
+  includes the base functionality of the identity provider, which is in other
+  words a configurable wallet. This fork add some UI improvements that
+  facilitates the configuration and conntection to the network. Try it out!
 
-  ```
+  ``` shell
   git clone https://github.com/snaphuman/aepp-aeproject-shape-vue.git 
 
   ```
 
-On each cloned repository folder (MemeVote and aepp-aeproject) fetch all their
-dependencies.
+  On each cloned repository folder (MemeVote and aepp-aeproject) fetch all their
+  dependencies.
 
-  ```
+  ``` shell
   npm install
 
   ```
 
 * Run both applications
 
-  ```
+  ``` shell
   # In Meme vote folder run:
   npm start
 
@@ -130,8 +130,8 @@ dependencies.
 
   ```
 
-At this point both applications can be accessed in the browser at
-http://localhost:8080 abd http://localhost:8081 respectively.
+  At this point both applications can be accessed in the browser at
+  http://localhost:8080 abd http://localhost:8081 respectively. 
 
 ## Enable blockchain interaction
 
@@ -151,15 +151,15 @@ path level.
 *note:* To run aeternity nodes make sure to have docker service up and running.
 
 * Initialize aeternity nodes
-  ```
+  ``` shell
   aeproject node
 
   ```
 
-At the end of this process, the nodes should be successfully started, and the
-the default wallets should be successfully funded.
+  At the end of this process, the nodes should be successfully started and the
+  default wallets should be successfully funded.
 
-  ```
+  ``` shell
   ===== Starting Node =====
   Creating network "memevote-aeproject_default" with the default driver
 
@@ -185,7 +185,7 @@ the default wallets should be successfully funded.
   `privileged: true` option for each container in the services block in the
   `docker-compose.yml` file as follows: 
   
-  ```
+  ``` shell
   node1:
     image: aeternity/aeternity:v5.0.2
     hostname: node1
@@ -203,15 +203,15 @@ the default wallets should be successfully funded.
   
   ```
 
-* Initialize ae_sophia compiler
-  ```
+* Initialize aesophia compiler
+  ``` shell
   aeproject compiler
 
   ```
 
-At the end of this procees the compiler should be successfully started
+  At the end of this procees the compiler should be successfully started
 
-```
+  ``` shell
   ===== Starting Compiler =====
 
   Creating memevote-aeproject_compiler_1 ...
@@ -220,11 +220,11 @@ At the end of this procees the compiler should be successfully started
   ..................
   ===== Compiler was successfully started! =====
 
-```
-
-Finally you can list existing docker containers
-
   ```
+
+  Finally you can list existing docker containers
+
+  ``` shell
   docker ps
 
   CONTAINER ID        IMAGE                            COMMAND                  CREATED             STATUS                    PORTS                                      NAMES
@@ -258,7 +258,7 @@ created an example contract which can be keeped or replaced for the new one.
 
   ```
 
-* Run de deploy operation
+* Run the deploy operation
 
   ``` shell
   aeproject deploy
@@ -269,11 +269,11 @@ created an example contract which can be keeped or replaced for the new one.
 
   ```
   
-This operation by default deploys the contract on the local network. We can use
-the following options to deploy the contract in the testnet:
+  This operation by default deploys the contract on the local network. We can
+  use the following options to deploy the contract in the testnet:
 
-``` shell
+  ``` shell
   aeproject deploy --network "https://sdk-testnet.aepps.com" --networkId "ae_uat" --compiler "https://compiler.aepps.com"
 
-```
+  ```
 
