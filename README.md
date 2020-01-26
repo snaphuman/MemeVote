@@ -319,7 +319,7 @@ ConfigClient component which provides a form that allows to input the public and
 private key of the wallet account, select the network to connect to, and input
 the url of the MemeVote aepp.
 
-https://i.imgur.com/7WEWDEF.gif
+![](https://i.imgur.com/7WEWDEF.gif)
 
 Instead of use this fork we can use the original aepp-aeproject-shape-vue but it
 has to be configured directly in the source code replacing the values in the
