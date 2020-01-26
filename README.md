@@ -284,7 +284,6 @@ created an example contract which can be keeped or replaced for the new one.
   ``` shell
   aeproject history
   
-  |---------------|-------------------------------------------------------|
   | Event Time    | 25 Jan, 07:31:15                                      |
   |---------------|-------------------------------------------------------|
   │ Public Key    │ ak_2mwRmUeYmfuW93ti9HMSUJzCk1EYcQEfikVSzgo6k2VghsWhgU │
@@ -310,15 +309,19 @@ created an example contract which can be keeped or replaced for the new one.
   Note that if you deploy the contract on the testnet or the local network, it
   appears referenced in the Network ID field of the returned table.
   
-  Also, if the contract was deployed on the testnet, it also can be verified
-  online in the network explorer at https://explorer.testnet.aeternity.io/
+  Also, if the contract was deployed on the testnet, it can be verified
+  online in the aeternity network explorer at https://explorer.testnet.aeternity.io/
 
 ### Configure wallet
 
 As I mentioned before, I have forked the aepp-aeproject-shape-vue that adds a
 ConfigClient component which provides a form that allows to input the public and
-private key of the wallet account, select the network to connect to and input
+private key of the wallet account, select the network to connect to, and input
 the url of the MemeVote aepp.
 
+https://i.imgur.com/7WEWDEF.gif
+
 Instead of use this fork we can use the original aepp-aeproject-shape-vue but it
-has to be configured directly in the source code.
+has to be configured directly in the source code replacing the values in the
+`./src/account.js` and `./src/components/Home.vue` files in the
+identity-provider folder. 
