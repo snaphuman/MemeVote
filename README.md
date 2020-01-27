@@ -325,3 +325,43 @@ Instead of use this fork we can use the original aepp-aeproject-shape-vue but it
 has to be configured directly in the source code replacing the values in the
 `./src/account.js` and `./src/components/Home.vue` files in the
 identity-provider folder. 
+
+### Setup contract address in MemeVote Daepp
+
+At this final step, we have to modify the ./src/settings.js file in the MemeVote
+folder and include the contract address returned during its deployment in the
+network or through the history command.
+
+``` javascript
+var settings = {
+    contractAddress: "YOUR_DEPLOYED_CONTRACT_ADDRESS_HERE",
+    contractSource: `payable contract MemeVote =
+  record meme  =
+    { creatorAddress : address,
+      url            : string,
+      name           : string,
+      voteCount      : int,
+      comments       : list(comment),
+      tags           : list(string)}
+  ...
+  ...
+  ...
+
+```
+
+## Final notes
+
+After completing this steps we are ready to play with the MemeVote daepp, but
+most important is that we are enabled to dig in the descentralized applications
+development for the aeternity blockchain. Take a look of the resources available
+on the [Documentation Hub](http://aeternity.com/documentation-hub/), [Github
+Repo](https://github.com/aeternity) and
+[Tutorials](https://github.com/aeternity/tutorials) for further information.
+
+Aeternity's ecosystem is evolving very fast, and there are new releases of
+tools like the [Fire Editor](https://github.com/nikita-fuchs/fire-editor), or
+the [Daepps Boilerplate](Daepps Boilerplate), and many others, which 
+intend is to facilitate the appropiation of this technology and help us to
+build daepps that can bring real word solutions.
+
+Happy Haecking! ;-)
