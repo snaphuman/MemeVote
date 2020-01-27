@@ -205,7 +205,7 @@ var app = new Vue({
                 creatorName: user,
                 memeUrl: url,
                 index: index,
-                votes: meme.voteCount,
+                votes: this.voteCount,
                 comments: [],
                 tags: tags
             });
