@@ -1,5 +1,5 @@
 var settings = {
-    contractAddress: "ct_41gLZMZyTZq4VktF5ha69gPUCwArkeMt5JUH519uP5SpUQav5",
+    contractAddress: "ct_NEbb5cqosp7PTFaxq7XR9dAH9FWoTaxJ3YixqqAUKjDs2Zonz",
     contractSource: `payable contract MemeVote =
   record meme  =
     { creatorAddress : address,
